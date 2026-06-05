@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La mia avventura in sala operatoria</title>
+
+<style>
+:root {
+    --ink: #263238;
+    --muted: #60727c;
+    --blue: #1f8bb5;
+    --teal: #2aa7a5;
+    --green: #39a86b;
+    --green-dark: #23764f;
+    --yellow: #ffd166;
+    --paper: #fffaf2;
+    --panel: #ffffff;
+    --shadow: 0 18px 45px rgba(33, 58, 72, 0.18);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--ink);
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    background:
+        radial-gradient(circle at 12% 8%, rgba(255, 209, 102, 0.55), transparent 16rem),
+        radial-gradient(circle at 88% 12%, rgba(42, 167, 165, 0.28), transparent 18rem),
+        linear-gradient(135deg, #e8f7ff 0%, #fff8ea 56%, #eef9ef 100%);
+}
+
+button {
+    border: 0;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.app {
+    width: min(1220px, calc(100vw - 24px));
+    margin: 0 auto;
+    padding: 16px 0 28px;
+}
+
+.topbar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+h1 {
+    margin: 0;
+    color: #176783;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 0.96;
+    letter-spacing: 0;
+}
+
+.subtitle {
+    max-width: 780px;
+    margin: 7px 0 0;
+    color: #425f6e;
+    font-size: clamp(1rem, 2vw, 1.18rem);
+    font-weight: 700;
+    line-height: 1.34;
+}
+
+.progress-card {
+    min-width: 205px;
+    padding: 12px 16px;
+    border: 5px solid white;
+    border-radius: 20px;
+    background: #fff7d8;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.progress-card span {
+    display: block;
+}
+
+.progress-label {
+    color: #76663d;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+}
+
+#progressText {
+    margin-top: 3px;
+    color: #cc7200;
+    font-size: 1.55rem;
+    line-height: 1;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+    gap: 18px;
+    align-items: stretch;
+}
+
+.image-stage,
+.panel {
+    min-height: 700px;
+    border: 7px solid white;
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.96);
+}
+
+.image-stage {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    padding: 18px;
+}
+
+.speech {
+    z-index: 2;
+    margin-bottom: 14px;
+    padding: 17px 20px;
+    border: 5px solid #eef9ff;
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 12px 26px rgba(35, 56, 66, 0.12);
+    text-align: left;
+}
+
+.speech strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #176783;
+    font-size: 1.28rem;
+}
+
+.speech p {
+    margin: 0;
+    color: #405966;
+    font-size: 1.07rem;
+    font-weight: 700;
+    line-height: 1.36;
+}
+
+.image-frame {
+    position: relative;
+    min-height: 500px;
+    border-radius: 24px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #dff6ff, #fff3dd);
+}
+
+#sceneImage {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    display: block;
+    object-fit: contain;
+    background: #f6fbff;
+}
+
+.image-fallback {
+    position: absolute;
+    inset: 0;
+    display: none;
+    place-items: center;
+    padding: 28px;
+    color: #526873;
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-align: center;
+    background: #f6fbff;
+}
+
+.image-fallback.show {
+    display: grid;
+}
+
+.panel {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.panel-head {
+    padding: 24px 24px 18px;
+    color: white;
+    background: linear-gradient(135deg, #176783, #2aa7a5);
+}
+
+.panel-head p {
+    margin: 0 0 6px;
+    font-weight: 900;
+    opacity: 0.9;
+    text-transform: uppercase;
+}
+
+.panel-head h2 {
+    margin: 0;
+    font-size: clamp(1.7rem, 3vw, 2.42rem);
+    line-height: 1;
+}
+
+.panel-body {
+    padding: 22px 24px;
+}
+
+.task-card {
+    padding: 18px;
+    border: 4px dashed #bfe5ee;
+    border-radius: 22px;
+    background: #f4fcff;
+}
+
+.task-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 12px;
+    color: #176783;
+    font-size: 1.22rem;
+}
+
+.task-card p {
+    margin: 0 0 14px;
+    color: #405966;
+    font-size: 1.04rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.choice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.choice,
+.chip {
+    min-height: 68px;
+    padding: 10px 12px;
+    border: 4px solid #cfeaf2;
+    border-radius: 16px;
+    color: #224d60;
+    background: white;
+    box-shadow: 0 5px 0 #cfeaf2;
+    text-align: center;
+}
+
+.choice span {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1.8rem;
+}
+
+.choice.selected,
+.chip.done {
+    color: white;
+    border-color: var(--green);
+    background: var(--green);
+    box-shadow: 0 5px 0 var(--green-dark);
+}
+
+.chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.breath-box {
+    display: grid;
+    grid-template-columns: 112px 1fr;
+    gap: 14px;
+    align-items: center;
+}
+
+.mask-game {
+    position: relative;
+    width: 104px;
+    height: 104px;
+    border: 6px solid white;
+    border-radius: 50%;
+    background: #d8fff0;
+    box-shadow: 0 12px 20px rgba(35, 56, 66, 0.14);
+}
+
+.mask-game::before {
+    content: "";
+    position: absolute;
+    left: 22px;
+    top: 32px;
+    width: 60px;
+    height: 42px;
+    border-radius: 24px;
+    background: #ff6f8d;
+}
+
+.mask-game::after {
+    content: "🍓";
+    position: absolute;
+    left: 34px;
+    top: 38px;
+    font-size: 1.7rem;
+}
+
+.meter {
+    height: 18px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #d8eef6;
+}
+
+.meter-fill {
+    width: 0%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--yellow), var(--green));
+    transition: width 0.25s ease;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.step-dot {
+    min-height: 62px;
+    display: grid;
+    place-items: center;
+    gap: 2px;
+    padding: 6px;
+    border: 3px solid #edf3f4;
+    border-radius: 14px;
+    color: #95a3aa;
+    background: #f7fafb;
+    font-size: 0.68rem;
+    font-weight: 900;
+    text-align: center;
+}
+
+.step-dot strong {
+    display: block;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.step-dot.done,
+.step-dot.active {
+    color: #176783;
+    border-color: #ffdf83;
+    background: #fff7d8;
+}
+
+.panel-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 18px 24px 24px;
+    border-top: 2px solid #e3eef2;
+}
+
+.primary,
+.secondary {
+    min-height: 54px;
+    border-radius: 16px;
+    padding: 12px 14px;
+}
+
+.primary {
+    color: white;
+    background: #1f8bb5;
+    box-shadow: 0 6px 0 #176783;
+}
+
+.secondary {
+    color: #176783;
+    background: #e9f8fd;
+    box-shadow: 0 6px 0 #c8eaf3;
+}
+
+.primary:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.ending {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    place-items: center;
+    padding: 24px;
+    background: rgba(26, 55, 70, 0.52);
+}
+
+.ending.show {
+    display: grid;
+}
+
+.ending-inner {
+    width: min(760px, 100%);
+    padding: 30px;
+    border: 8px solid white;
+    border-radius: 28px;
+    background: var(--paper);
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.ending-inner h2 {
+    margin: 0 0 10px;
+    color: #176783;
+    font-size: clamp(2rem, 5vw, 3.3rem);
+    line-height: 1;
+}
+
+.ending-inner p {
+    margin: 8px auto;
+    max-width: 620px;
+    color: #405966;
+    font-size: 1.14rem;
+    font-weight: 700;
+    line-height: 1.42;
+}
+
+.confetti {
+    position: fixed;
+    top: -16px;
+    z-index: 40;
+    width: 12px;
+    height: 12px;
+    animation: fall 3.2s linear forwards;
+}
+
+@keyframes fall {
+    to { transform: translateY(110vh) rotate(720deg); }
+}
+
+@media (max-width: 1040px) {
+    .topbar,
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .progress-card {
+        min-width: 0;
+    }
+}
+
+    @media (max-width: 680px) {
+        .app {
+            width: calc(100vw - 14px);
+            padding-top: 10px;
+        }
+
+        .image-stage,
+        .panel {
+            min-height: auto;
+        }
+
+        #sceneImage,
+        .image-frame {
+            min-height: 360px;
+        }
+
+        .choice-grid,
+        .breath-box,
+        .panel-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .steps {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    /* Stili per il minigioco - Versione responsiva */
+    #game {
+        width: 900px; /* Fissiamo la larghezza per mantenere le proporzioni del percorso */
+        max-width: 100%; /* Assicura che non esca dallo schermo sui cellulari */
+        height: 700px;
+        margin: 20px auto; /* Centratura perfetta */
+        position: relative;
+        background: #f8fff1;
+        border: 6px solid #ffd54f;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .cloud {
+        position: absolute;
+        font-size: 50px;
+        opacity: 0.8;
+    }
+
+    .path {
+        position: absolute;
+        background: #ffe082;
+        border-radius: 30px;
+    }
+
+    #start {
+        position: absolute;
+        left: 30px;
+        top: 260px;
+        width: 130px;
+        height: 120px;
+        background: #64b5f6;
+        border-radius: 20px;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        font-size: 22px;
+        padding-top: 15px;
+    }
+
+    #goal {
+        position: absolute;
+        right: 30px;
+        top: 250px;
+        width: 150px;
+        height: 140px;
+        background: #81c784;
+        border-radius: 20px;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        font-size: 22px;
+        padding-top: 20px;
+    }
+
+    #car {
+        position: absolute;
+        left: 8.8%;
+        top: 41.4%;
+        font-size: 60px;
+        cursor: grab;
+        user-select: none;
+        z-index: 1000;
+    }
+
+    .star {
+        position: absolute;
+        font-size: 40px;
+        cursor: pointer;
+        transition: .3s;
+    }
+
+        .star.collected {
+            transform: scale(0);
+            opacity: 0;
+        }
+
+    #winScreen {
+        display: none;
+        position: absolute;
+        inset: 0;
+        background: rgba(255,255,255,.9);
+        z-index: 5000;
+        text-align: center;
+        padding-top: 150px;
+    }
+    .steps {
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    #gameSection {
+        width: 100%;
+        text-align: center;
+    }
+
+    #gameSection h2 {
+        margin: 0 0 10px;
+        color: #176783;
+        font-size: clamp(1.5rem, 3vw, 2.2rem);
+        line-height: 1.08;
+    }
+
+    #counter {
+        display: inline-block;
+        margin: 0 auto 12px;
+        padding: 10px 18px;
+        border: 4px solid #fff;
+        border-radius: 999px;
+        color: #176783;
+        background: #fff7d8;
+        box-shadow: 0 8px 18px rgba(35, 56, 66, 0.12);
+        font-weight: 900;
+    }
+
+    /* Tappa 7: layout centrato e più ampio per il minigioco */
+    #mainLayout.tappa-finale {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    #mainLayout.tappa-finale .image-stage {
+        display: none !important;
+    }
+
+    #mainLayout.tappa-finale .panel {
+        width: min(100%, 1180px) !important;
+        max-width: 1180px !important;
+        min-height: auto !important;
+        margin: 0 auto !important;
+        border: 7px solid white !important;
+        border-radius: 28px !important;
+        box-shadow: var(--shadow) !important;
+        overflow: hidden;
+    }
+
+    #mainLayout.tappa-finale .panel-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        width: 100%;
+        padding: 22px 24px;
+        overflow-x: auto;
+    }
+
+    #mainLayout.tappa-finale .task-card {
+        width: min(100%, 760px);
+        text-align: center;
+    }
+
+    #mainLayout.tappa-finale #gameSection {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    #mainLayout.tappa-finale #game {
+        width: 1100px !important;
+        max-width: none !important;
+        height: 650px !important;
+        margin: 0 auto 8px !important;
+        transform: none !important;
+        transform-origin: center center;
+    }
+
+    @media (max-width: 680px) {
+        #mainLayout.tappa-finale .panel-body {
+            padding: 18px 10px;
+        }
+
+        #mainLayout.tappa-finale .steps {
+            grid-template-columns: repeat(2, 1fr);
+            width: 100%;
+        }
+    }
+
+</style>
+</head>
+
+<body>
+    <main class="app">
+        <header class="topbar">
+            <div>
+                <h1>La mia avventura in sala operatoria</h1>
+                <p class="subtitle">Una storia interattiva illustrata: ogni professionista si presenta al bambino e propone una piccola scelta per rendere il percorso più comprensibile.</p>
+            </div>
+            <div class="progress-card" aria-live="polite">
+                <span class="progress-label">Tappe completate</span>
+                <span id="progressText">1/6</span>
+            </div>
+        </header>
+
+        <section id="mainLayout" class="layout">
+            <div class="image-stage" aria-label="Scena illustrata del percorso chirurgico">
+                <div class="speech">
+                    <strong id="speakerName">Infermiere</strong>
+                    <p id="speechText">Ciao, sono l'infermiere. Ti aiuterò a prepararti per la sala operatoria. Prima scegliamo insieme il tuo pigiama speciale.</p>
+                </div>
+                <div class="image-frame">
+                    <img id="sceneImage" alt="Scena del percorso chirurgico pediatrico">
+                    <div id="imageFallback" class="image-fallback">Immagine non trovata. Controlla che il file esista nella cartella Downloads.</div>
+                </div>
+            </div>
+
+            <article class="panel">
+                <div class="panel-head">
+                    <p id="stepKicker">Tappa 1 di 6</p>
+                    <h2 id="stepTitle">Conosci l'infermiere</h2>
+                </div>
+
+                <div class="panel-body">
+                    <div class="task-card">
+                        <h3><span>🎲</span><span>Attività</span></h3>
+                        <p id="taskIntro">Tocca il tuo oggetto speciale prima di iniziare.</p>
+                        <div id="taskContent"></div>
+                    </div>
+                    <!-- PROVA 7 - LABIRINTO -->
+                    <div id="gameSection" style="display:none;">
+
+                        <h2>🚗 Accompagna il paziente in Sala Operatoria</h2>
+
+                        <div id="counter">⭐ Stelle raccolte: 0 / 5</div>
+
+                        <div id="game">
+
+                            <div id="start">
+                                🏥<br>Reparto
+                            </div>
+
+                            <div id="goal">
+                                🩺<br>
+                                Sala<br>
+                                Operatoria
+                            </div>
+
+                            <div id="car">🚗</div>
+
+                            <!-- STELLE -->
+
+                            <div class="star" style="left:220px;top:300px;">⭐</div>
+                            <div class="star" style="left:350px;top:160px;">⭐</div>
+                            <div class="star" style="left:620px;top:160px;">⭐</div>
+                            <div class="star" style="left:550px;top:510px;">⭐</div>
+                            <div class="star" style="left:950px;top:300px;">⭐</div>
+
+                            <!-- PERCORSI -->
+
+                            <div class="path" style="left:120px;top:300px;width:900px;height:50px;"></div>
+
+                            <div class="path" style="left:250px;top:150px;width:50px;height:200px;"></div>
+                            <div class="path" style="left:250px;top:150px;width:500px;height:50px;"></div>
+                            <div class="path" style="left:750px;top:150px;width:50px;height:180px;"></div>
+
+                            <div class="path" style="left:450px;top:300px;width:50px;height:220px;"></div>
+                            <div class="path" style="left:450px;top:500px;width:400px;height:50px;"></div>
+                            <div class="path" style="left:850px;top:350px;width:50px;height:170px;"></div>
+
+                            <div id="winScreen" style="display:none;">
+                                <h2>🎉 BRAVISSIMO! 🎉</h2>
+                                <p>Hai accompagnato il paziente in Sala Operatoria!</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="steps" aria-label="Tappe del gioco">
+                        <div class="step-dot active" data-dot="0"><strong>👋</strong>Inizio</div>
+                        <div class="step-dot" data-dot="1"><strong>👕</strong>Pigiama</div>
+                        <div class="step-dot" data-dot="2"><strong>🤝</strong>Trasporto</div>
+                        <div class="step-dot" data-dot="3"><strong>💚</strong>Equipe</div>
+                        <div class="step-dot" data-dot="4"><strong>🍓</strong>Maschera</div>
+                        <div class="step-dot" data-dot="5"><strong>🌤️</strong>Risveglio</div>
+                        <div class="step-dot" data-dot="6"><strong>🚗</strong>Missione</div>
+                    </div>
+                </div>
+
+                <div class="panel-actions">
+                    <button class="secondary" id="listenButton" type="button">Ascolta</button>
+                    <button class="primary" id="nextButton" type="button" disabled>Avanti</button>
+                </div>
+            </article>
+        </section>
+    </main>
+
+<div class="ending" id="ending" role="dialog" aria-modal="true" aria-labelledby="endingTitle">
+    <div class="ending-inner">
+        <h2 id="endingTitle">Percorso conosciuto</h2>
+        <p>Ora sai chi incontrerai: l'infermiere prepara, l'ausiliario accompagna, l'anestesista aiuta a dormire con la mascherina alla fragola, chirurgo e infermiere curano e controllano.</p>
+        <p>Puoi sempre chiedere: "Chi sei?", "Cosa succede adesso?", "Posso respirare piano?".</p>
+        <button class="primary" id="playAgain" type="button">Gioca ancora</button>
+    </div>
+</div>
+
+<script>
+
+    // Aggiungi queste variabili globali nello script principale
+    let car, goal, game;
+    let starsCollected = 0;
+    let dragging = false;
+
+    
+const scenes = [
+    {
+        image: "file:///Users/stefanopepe/Downloads/immagine1.png",
+        speaker: "",
+        title: "Noi siamo la tua equipe",
+        speech: "Noi siamo la tua equipe. Il chirurgo e l'infermiere sono vestiti di verde. Mentre dormi, ci prenderemo cura delle tue ferite e controlleremo che tutto vada bene.",
+        intro: "Tocca il tuo oggetto speciale prima di iniziare.",
+        type: "comfort"
+    },
+    {
+        image: "file:///Users/stefanopepe/Downloads/immagine2.png",
+        speaker: "",
+        title: "Scegli il pigiama",
+        speech: "Ora scegliamo il pigiama speciale per il percorso. Puoi scegliere quello che ti piace di più.",
+        intro: "Scegli il pigiama che vorresti indossare.",
+        type: "pajama"
+    },
+    {
+        image: "file:///Users/stefanopepe/Downloads/immagine5.png",
+        speaker: "",
+        title: "Conosci l'infermiere",
+        speech: "Ciao, sono l'infermiere. Ti aiuterò a prepararti per la sala operatoria. Puoi tenere con te un oggetto speciale che ti fa sentire più tranquillo.",
+        intro: "Tocca i compiti della squadra.",
+        type: "team"
+    },
+    {
+        image: "file:///Users/stefanopepe/Downloads/immagine3.png",
+        speaker: "",
+        title: "La mascherina alla fragola",
+        speech: "Ciao, sono l'anestesista. Sono vestito di verde. Ti aiuterò ad addormentarti piano con una mascherina che profuma di fragola.",
+        intro: "Tocca le cose che aiutano durante il tragitto.",
+        type: "transport"
+    },
+    
+    {
+        image: "file:///Users/stefanopepe/Downloads/immagine4.png",
+        speaker: "",
+        title: "L'anestesia",
+        speech: "Respira lentamente e pensa ad una cosa bella.",
+        intro: "Fai tre respiri lenti con la mascherina alla fragola.",
+        type: "breath"
+    },
+    {
+        image: "file:///Users/stefanopepe/Downloads/immagine5.png",
+        speaker: "",
+        title: "Quando ti svegli",
+        speech: "Quando ti svegli potresti avere sonno o sentirti strano. Io ti controllerò e tu potrai dirmi se hai freddo, sete, male o paura.",
+        intro: "Scegli tre parole utili da dire al risveglio.",
+        type: "wake"
+    },
+    
+    {
+        image: "",
+        speaker: "Gioco",
+        title: "Missione: Trasporto",
+        speech: "Ora tocca a te! Guida la macchinina verso la sala operatoria raccogliendo tutte le stelle.",
+        intro: "Gioca al minigioco del percorso.",
+        type: "miniGame"
+    }
+];
+
+const speakerName = document.getElementById("speakerName");
+const speechText = document.getElementById("speechText");
+const stepKicker = document.getElementById("stepKicker");
+const stepTitle = document.getElementById("stepTitle");
+const taskIntro = document.getElementById("taskIntro");
+const taskContent = document.getElementById("taskContent");
+const progressText = document.getElementById("progressText");
+const nextButton = document.getElementById("nextButton");
+const listenButton = document.getElementById("listenButton");
+const playAgain = document.getElementById("playAgain");
+const ending = document.getElementById("ending");
+const sceneImage = document.getElementById("sceneImage");
+const imageFallback = document.getElementById("imageFallback");
+const dots = [...document.querySelectorAll(".step-dot")];
+
+let current = 0;
+let completed = new Set();
+let miniProgress = 0;
+
+    function renderScene(index) {
+        current = index;
+        miniProgress = 0;
+        const scene = scenes[index];
+
+        // Seleziona il contenitore principale del layout
+        const layout = document.getElementById("mainLayout");
+        const gameSection = document.getElementById("gameSection");
+
+        // LOGICA LAYOUT: alla tappa 7 il minigioco viene centrato su una colonna unica
+        if (index === 6) {
+            layout.classList.add("tappa-finale");
+            if (gameSection) {
+                gameSection.style.display = "flex";
+            }
+        } else {
+            layout.classList.remove("tappa-finale");
+            if (gameSection) {
+                gameSection.style.display = "none";
+            }
+        }
+
+        // AGGIORNAMENTO TESTI (standard)
+        speakerName.textContent = scene.speaker || "";
+        speechText.textContent = scene.speech || "";
+        stepKicker.textContent = `Tappa ${index + 1} di ${scenes.length}`;
+        stepTitle.textContent = scene.title || "";
+        taskIntro.textContent = scene.intro || "";
+        progressText.textContent = `${Math.max(1, completed.size + 1)}/${scenes.length}`;
+
+        nextButton.disabled = !completed.has(index);
+        nextButton.textContent = index === scenes.length - 1 ? "Finisci" : "Avanti";
+
+        // GESTIONE IMMAGINE (Nascondi l'immagine della colonna sinistra alla tappa finale)
+        const stage = document.querySelector(".image-stage");
+        if (index === 6 || scene.image === "") {
+            stage.style.display = "none";
+        } else {
+            stage.style.display = "grid";
+            sceneImage.style.display = "block";
+            sceneImage.style.opacity = "1";
+            sceneImage.src = scene.image;
+        }
+
+        // AGGIORNAMENTO DOTS
+        dots.forEach((dot, dotIndex) => {
+            dot.classList.toggle("active", dotIndex === index);
+            dot.classList.toggle("done", completed.has(dotIndex));
+        });
+
+        renderTask(scene.type);
+    }
+
+sceneImage.addEventListener("error", () => {
+    sceneImage.style.opacity = "0";
+    imageFallback.classList.add("show");
+});
+
+function completeScene() {
+    completed.add(current);
+    nextButton.disabled = false;
+    dots[current].classList.add("done");
+    progressText.textContent = `${Math.min(scenes.length, completed.size + 1)}/${scenes.length}`;
+}
+
+    function renderTask(type) {
+        const gameSection = document.getElementById("gameSection");
+        const taskContent = document.getElementById("taskContent");
+
+        if (type === "miniGame") {
+
+            if (gameSection)
+                gameSection.style.display = "flex";
+
+            taskContent.style.display = "none";
+
+            initMiniGame();   // ← AGGIUNGI QUESTA RIGA
+
+        } else {
+
+            if (gameSection)
+                gameSection.style.display = "none";
+
+            taskContent.style.display = "block";
+
+            const tasks = {
+                comfort: renderComfortTask,
+                pajama: renderPajamaTask,
+                transport: renderTransportTask,
+                team: renderTeamTask,
+                breath: renderBreathTask,
+                wake: renderWakeTask
+            };
+
+            if (tasks[type])
+                tasks[type]();
+        }
+    }
+function renderComfortTask() {
+    taskContent.innerHTML = `
+        <div class="choice-grid">
+            <button class="choice" type="button"><span>🧸</span>Orsetto</button>
+            <button class="choice" type="button"><span>💬</span>Una domanda</button>
+        </div>
+    `;
+    bindSingleChoice();
+}
+
+function renderPajamaTask() {
+    taskContent.innerHTML = `
+        <div class="choice-grid">
+            <button class="choice" type="button"><span>⭐</span>Azzurro con stelle</button>
+            <button class="choice" type="button"><span>🧸</span>Verde con orsetto</button>
+        </div>
+    `;
+    bindSingleChoice();
+}
+
+function renderTransportTask() {
+    taskContent.innerHTML = `
+        <div class="chip-row">
+            <button class="chip" type="button">Lettino</button>
+            <button class="chip" type="button">Genitori vicino</button>
+            <button class="chip" type="button">Ausiliario</button>
+        </div>
+    `;
+    bindChipTask(2);
+}
+
+function renderTeamTask() {
+    taskContent.innerHTML = `
+        <div class="chip-row">
+            <button class="chip" type="button">Chirurgo: cura le ferite</button>
+            <button class="chip" type="button">Infermiere: controlla e aiuta</button>
+            <button class="chip" type="button">Equipe: lavora insieme</button>
+        </div>
+    `;
+    bindChipTask(3);
+}
+
+function renderBreathTask() {
+    taskContent.innerHTML = `
+        <div class="breath-box">
+            <div class="mask-game" aria-hidden="true"></div>
+            <div>
+                <div class="meter"><div class="meter-fill" id="meterFill"></div></div>
+                <div class="chip-row" style="margin-top:12px;">
+                    <button class="chip" id="breathButton" type="button">Respiro piano</button>
+                </div>
+            </div>
+        </div>
+    `;
+    const fill = document.getElementById("meterFill");
+    document.getElementById("breathButton").addEventListener("click", () => {
+        miniProgress = Math.min(3, miniProgress + 1);
+        fill.style.width = `${miniProgress * 34}%`;
+        if (miniProgress === 3) {
+            document.getElementById("breathButton").classList.add("done");
+            completeScene();
+        }
+    });
+}
+
+function renderWakeTask() {
+    taskContent.innerHTML = `
+        <div class="chip-row">
+            <button class="chip" type="button">Ho freddo</button>
+            <button class="chip" type="button">Ho sete</button>
+            <button class="chip" type="button">Ho male</button>
+            <button class="chip" type="button">Ho paura</button>
+        </div>
+    `;
+    bindChipTask(3);
+}
+
+    // Funzione per raccogliere le stelle
+    function collectStars() {
+        const carRect = car.getBoundingClientRect();
+
+        document.querySelectorAll(".star").forEach(star => {
+            // Se la stella è già stata presa, saltala
+            if (star.classList.contains("collected")) return;
+
+            const starRect = star.getBoundingClientRect();
+
+            // Controlla se la macchinina tocca la stella
+            if (intersects(carRect, starRect)) {
+                star.classList.add("collected");
+                starsCollected++;
+
+                // Aggiorna il contatore a video
+                document.getElementById("counter").innerHTML = "⭐ Stelle raccolte: " + starsCollected + " / 5";
+            }
+        });
+    }
+
+    // Funzione per controllare se ha vinto (raggiunto la sala operatoria con 5 stelle)
+    function checkWin() {
+        const carRect = car.getBoundingClientRect();
+        const goalRect = goal.getBoundingClientRect();
+
+        // Se tocca l'arrivo e ha 5 stelle
+        if (intersects(carRect, goalRect) && starsCollected === 5) {
+            document.getElementById("winScreen").style.display = "block";
+            createConfetti();
+
+            // Collega al tuo programma principale per sbloccare il tasto "Avanti"
+            if (typeof completeScene === 'function') {
+                completeScene();
+            }
+        }
+    }
+
+    // Funzione di utilità per vedere se due oggetti si toccano
+    function intersects(a, b) {
+        return !(
+            a.right < b.left ||
+            a.left > b.right ||
+            a.bottom < b.top ||
+            a.top > b.bottom
+        );
+    }
+function bindSingleChoice() {
+    taskContent.querySelectorAll(".choice").forEach((button) => {
+        button.addEventListener("click", () => {
+            taskContent.querySelectorAll(".choice").forEach((item) => item.classList.remove("selected"));
+            button.classList.add("selected");
+            completeScene();
+        });
+    });
+}
+
+function bindChipTask(target) {
+    taskContent.querySelectorAll(".chip").forEach((button) => {
+        button.addEventListener("click", () => {
+            if (button.classList.contains("done")) return;
+            button.classList.add("done");
+            miniProgress++;
+            if (miniProgress >= target) completeScene();
+        });
+    });
+}
+
+function speakCurrent() {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(`${speakerName.textContent}. ${speechText.textContent}`);
+    utterance.lang = "it-IT";
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+}
+
+function showEnding() {
+    ending.classList.add("show");
+    for (let i = 0; i < 90; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti";
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.background = `hsl(${Math.random() * 360}, 85%, 62%)`;
+        piece.style.animationDelay = `${Math.random()}s`;
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 4200);
+    }
+}
+
+function resetAll() {
+    completed = new Set();
+    ending.classList.remove("show");
+    renderScene(0);
+}
+
+nextButton.addEventListener("click", () => {
+    if (!completed.has(current)) return;
+    if (current === scenes.length - 1) {
+        showEnding();
+        return;
+    }
+    renderScene(current + 1);
+});
+
+listenButton.addEventListener("click", speakCurrent);
+    playAgain.addEventListener("click", resetAll);
+    function initMiniGame() {
+        starsCollected = 0;
+        document.getElementById("counter").innerHTML = "⭐ Stelle raccolte: 0 / 5";
+        document.querySelectorAll(".star").forEach(star => star.classList.remove("collected"));
+        document.getElementById("winScreen").style.display = "none";
+
+        car = document.getElementById("car");
+        game = document.getElementById("game");
+        goal = document.getElementById("goal");
+
+        if (!car || !game || !goal) return;
+
+        car.style.left = "55px";
+        car.style.top = "290px";
+
+        car.onmousedown = () => dragging = true;
+        document.onmouseup = () => dragging = false;
+
+        document.onmousemove = (e) => {
+            if (!dragging) return;
+
+            const rect = game.getBoundingClientRect();
+
+            // Calcolo posizione relativa al box
+            let x = e.clientX - rect.left - 20;
+            let y = e.clientY - rect.top - 20;
+
+            // Limiti dinamici basati sulla grandezza reale del box
+            const maxX = rect.width - 40;
+            const maxY = rect.height - 40;
+
+            x = Math.max(0, Math.min(maxX, x));
+            y = Math.max(0, Math.min(maxY, y));
+
+            car.style.left = x + "px";
+            car.style.top = y + "px";
+
+            collectStars();
+            checkWin();
+        };
+    
+    }
+
+renderScene(0);
+</script>
+</body>
+</html>
+
+
